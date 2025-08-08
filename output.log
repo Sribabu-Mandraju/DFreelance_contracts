@@ -1,0 +1,143 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/unit/testProposalManager.t.sol:TestProposalManager
+[FAIL: BidderCanOnlyStartWork()] testFirstPayment() (gas: 487031)
+Logs:
+  usdc contract address : 0x5FbDB2315678afecb367f032d93F642f64180aa3
+  HFT token contract address : 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+  treasury contract address : 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+  escrow contract address : 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+  Proposal Management contract address : 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+
+Traces:
+  [17296583] TestProposalManager::setUp()
+    ├─ [9446503] → new DeployLocal@0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+    │   └─ ← [Return] 46944 bytes of code
+    ├─ [7657349] DeployLocal::run()
+    │   ├─ [0] VM::envUint("PRIVATE_KEY") [staticcall]
+    │   │   └─ ← [Return] <env var value>
+    │   ├─ [0] VM::startBroadcast(<pk>)
+    │   │   └─ ← [Return]
+    │   ├─ [1034635] → new MockUSDC@0x5FbDB2315678afecb367f032d93F642f64180aa3
+    │   │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   │   ├─ emit Transfer(from: 0x0000000000000000000000000000000000000000, to: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, value: 1000000000000 [1e12])
+    │   │   └─ ← [Return] 4584 bytes of code
+    │   ├─ [421136] → new Treasury@0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+    │   │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   │   └─ ← [Return] 1981 bytes of code
+    │   ├─ [890674] → new Escrow@0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+    │   │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   │   └─ ← [Return] 4324 bytes of code
+    │   ├─ [1545496] → new HFTtoken@0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+    │   │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   │   └─ ← [Return] 6917 bytes of code
+    │   ├─ [3486213] → new ProposalManager@0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+    │   │   ├─ emit DaoMemberAdded(member: 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f, role: 1)
+    │   │   ├─ emit DaoMemberAdded(member: 0x14dC79964da2C08b23698B3D3cc7Ca32193d9955, role: 1)
+    │   │   ├─ emit DaoMemberAdded(member: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, role: 0)
+    │   │   └─ ← [Return] 15913 bytes of code
+    │   ├─ [0] VM::stopBroadcast()
+    │   │   └─ ← [Return]
+    │   ├─ [0] console::log("usdc contract address :", MockUSDC: [0x5FbDB2315678afecb367f032d93F642f64180aa3]) [staticcall]
+    │   │   └─ ← [Stop]
+    │   ├─ [0] console::log("HFT token contract address :", HFTtoken: [0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9]) [staticcall]
+    │   │   └─ ← [Stop]
+    │   ├─ [0] console::log("treasury contract address :", Treasury: [0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512]) [staticcall]
+    │   │   └─ ← [Stop]
+    │   ├─ [0] console::log("escrow contract address :", Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0]) [staticcall]
+    │   │   └─ ← [Stop]
+    │   ├─ [0] console::log("Proposal Management contract address :", ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9]) [staticcall]
+    │   │   └─ ← [Stop]
+    │   └─ ← [Return] ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], MockUSDC: [0x5FbDB2315678afecb367f032d93F642f64180aa3], HFTtoken: [0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9], Treasury: [0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512]
+    ├─ [0] VM::startPrank(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   └─ ← [Return]
+    ├─ [22910] Escrow::setGovernanceContract(ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9])
+    │   └─ ← [Stop]
+    ├─ [0] VM::stopPrank()
+    │   └─ ← [Return]
+    └─ ← [Stop]
+
+  [487031] TestProposalManager::testFirstPayment()
+    ├─ [0] VM::startPrank(alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506])
+    │   └─ ← [Return]
+    ├─ [122373] ProposalManager::createProposal(864000 [8.64e5], 10000000 [1e7])
+    │   ├─ emit ProposalCreated(proposalId: 0, client: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506])
+    │   └─ ← [Stop]
+    ├─ [0] VM::stopPrank()
+    │   └─ ← [Return]
+    ├─ [0] VM::startPrank(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   └─ ← [Return]
+    ├─ [32519] MockUSDC::mint(alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], 7000000 [7e6])
+    │   ├─ emit Transfer(from: 0x0000000000000000000000000000000000000000, to: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], value: 7000000 [7e6])
+    │   └─ ← [Stop]
+    ├─ [0] VM::stopPrank()
+    │   └─ ← [Return]
+    ├─ [0] VM::startPrank(alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506])
+    │   └─ ← [Return]
+    ├─ [25025] ProposalManager::openProposalToBid(0)
+    │   ├─ emit ProposalStateUpdated(proposalId: 0, newState: 1, timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [47017] ProposalManager::acceptBid(0, star: [0xC6512469fBc113b63329883254312568751f2183], 7000000 [7e6])
+    │   ├─ emit ProposalStateUpdated(proposalId: 0, newState: 2, timestamp: 1)
+    │   ├─ emit BidPlaced(proposalId: 0, bidder: star: [0xC6512469fBc113b63329883254312568751f2183])
+    │   └─ ← [Stop]
+    ├─ [25319] MockUSDC::approve(ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], 7000000 [7e6])
+    │   ├─ emit Approval(owner: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], spender: ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], value: 7000000 [7e6])
+    │   └─ ← [Return] true
+    ├─ [119625] ProposalManager::depositBidAmount(0)
+    │   ├─ [26770] MockUSDC::transferFrom(alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], 7000000 [7e6])
+    │   │   ├─ emit Transfer(from: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], to: ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], value: 7000000 [7e6])
+    │   │   └─ ← [Return] true
+    │   ├─ [25319] MockUSDC::approve(Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], 7000000 [7e6])
+    │   │   ├─ emit Approval(owner: ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], spender: Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], value: 7000000 [7e6])
+    │   │   └─ ← [Return] true
+    │   ├─ [53032] Escrow::depositFunds(0, 7000000 [7e6])
+    │   │   ├─ [26770] MockUSDC::transferFrom(ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], 7000000 [7e6])
+    │   │   │   ├─ emit Transfer(from: ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], to: Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], value: 7000000 [7e6])
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ emit FundsDeposited(proposalId: 0, from: ProposalManager: [0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9], amount: 7000000 [7e6], timestamp: 1)
+    │   │   └─ ← [Stop]
+    │   ├─ emit ProposalStateUpdated(proposalId: 0, newState: 3, timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [0] VM::stopPrank()
+    │   └─ ← [Return]
+    ├─ [917] MockUSDC::balanceOf(Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0]) [staticcall]
+    │   └─ ← [Return] 7000000 [7e6]
+    ├─ [0] VM::assertEq(7000000 [7e6], 7000000 [7e6]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::startPrank(star: [0xC6512469fBc113b63329883254312568751f2183])
+    │   └─ ← [Return]
+    ├─ [5176] ProposalManager::startWork(0)
+    │   ├─ emit ProposalStateUpdated(proposalId: 0, newState: 4, timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [3187] ProposalManager::getProposal(0) [staticcall]
+    │   └─ ← [Return] Proposal_type({ proposalId: 0, proposalAddress: 0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506 })
+    ├─ [0] VM::assertEq(4, 4) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::stopPrank()
+    │   └─ ← [Return]
+    ├─ [0] VM::startPrank(alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506])
+    │   └─ ← [Return]
+    ├─ [69291] ProposalManager::payFirstMilestone(0)
+    │   ├─ [60677] Escrow::processPayment(0, alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], star: [0xC6512469fBc113b63329883254312568751f2183], 2800000 [2.8e6], 100)
+    │   │   ├─ [25723] MockUSDC::transfer(Treasury: [0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512], 28000 [2.8e4])
+    │   │   │   ├─ emit Transfer(from: Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], to: Treasury: [0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512], value: 28000 [2.8e4])
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [25723] MockUSDC::transfer(star: [0xC6512469fBc113b63329883254312568751f2183], 2772000 [2.772e6])
+    │   │   │   ├─ emit Transfer(from: Escrow: [0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0], to: star: [0xC6512469fBc113b63329883254312568751f2183], value: 2772000 [2.772e6])
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ emit PaymentProcessed(proposalId: 0, client: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], bidder: star: [0xC6512469fBc113b63329883254312568751f2183], amount: 2772000 [2.772e6], fee: 28000 [2.8e4], timestamp: 1)
+    │   │   └─ ← [Stop]
+    │   ├─ emit PaymentSuccessful(proposalId: 0, client: alex: [0x9a00A1Dc56Bf001dBEd0FF0eEDfa1C5f80620506], amount: 2800000 [2.8e6])
+    │   └─ ← [Revert] BidderCanOnlyStartWork()
+    └─ ← [Revert] BidderCanOnlyStartWork()
+
+Suite result: FAILED. 0 passed; 1 failed; 0 skipped; finished in 15.87ms (2.22ms CPU time)
+
+Ran 1 test suite in 101.95ms (15.87ms CPU time): 0 tests passed, 1 failed, 0 skipped (1 total tests)
+
+Failing tests:
+Encountered 1 failing test in test/unit/testProposalManager.t.sol:TestProposalManager
+[FAIL: BidderCanOnlyStartWork()] testFirstPayment() (gas: 487031)
+
+Encountered a total of 1 failing tests, 0 tests succeeded
