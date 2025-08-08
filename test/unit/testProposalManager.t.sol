@@ -201,6 +201,21 @@ contract TestProposalManager is Test {
 
     }
 
+
+  function testTreasureBalance() public view {
+    // Make sure you're using the correct Treasury instance
+    Treasury treasury = Treasury(0x988ABc52D200bF476885262f82a3a5A1a4e2A2de);
+    
+    // Check USDC token address
+    address usdcAddress = treasury.usdcTokenAddress();
+    console.log("USDC Address:", usdcAddress);
+    
+    // Get balance
+    uint256 balance = treasury.getTotalTreasureBalance();
+    console.log("Balance:", balance);
+    
+    assertTrue(balance >= 0, "Balance should be >= 0");
+}
     modifier createProposal() {
         vm.startPrank(alex);
         c_ProposalManager.createProposal(10 days, 10 * 1e6);

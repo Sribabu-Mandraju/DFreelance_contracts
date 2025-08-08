@@ -14,7 +14,7 @@ import {PLATFORM_FEE_BASEIC_POINTS, BID_FEE} from "../src/types/Constants.sol";
 contract DeployBase is Script {
     function run() external returns (ProposalManager, Escrow, address, HFTtoken, Treasury) {
         // Load environment variables
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = vm.envUint("WALLET_PRIVATE_KEY");
         address deployerAddress = vm.addr(deployerPrivateKey);
         
         // DAO members (replace with actual Base addresses)
@@ -32,11 +32,11 @@ contract DeployBase is Script {
         // MockUSDC usdcToken = new MockUSDC();
         
         // 2. Deploy Treasury
-        Treasury treasury = new Treasury(deployerAddress, 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238);
+        Treasury treasury = new Treasury(deployerAddress, 0x036CbD53842c5426634e7929541eC2318f3dCF7e);
         
         // 3. Deploy Escrow
         Escrow escrowContract = new Escrow(
-            0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238,
+            0x036CbD53842c5426634e7929541eC2318f3dCF7e,
             address(treasury),
             deployerAddress
         );
@@ -51,7 +51,7 @@ contract DeployBase is Script {
             PLATFORM_FEE_BASEIC_POINTS,
             address(treasury),
             address(ourToken),
-            0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238,
+            0x036CbD53842c5426634e7929541eC2318f3dCF7e,
             address(escrowContract),
             BID_FEE
         );
@@ -59,12 +59,12 @@ contract DeployBase is Script {
         vm.stopBroadcast();
 
         // Log addresses (visible in forge scripts)
-        console.log("USDC Address:", 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238);
+        console.log("USDC Address:", 0x036CbD53842c5426634e7929541eC2318f3dCF7e);
         console.log("Treasury Address:", address(treasury));
         console.log("Escrow Address:", address(escrowContract));
         console.log("HFT Token Address:", address(ourToken));
         console.log("ProposalManager Address:", address(proposalManager));
 
-        return (proposalManager, escrowContract, 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238, ourToken, treasury);
+        return (proposalManager, escrowContract, 0x036CbD53842c5426634e7929541eC2318f3dCF7e, ourToken, treasury);
     }
 }

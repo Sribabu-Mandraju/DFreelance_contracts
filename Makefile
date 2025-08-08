@@ -46,4 +46,7 @@ deploy:
 
 deploy-local:
 	@forge script script/DeployLocal.s.sol:DeployLocal --rpc-url $(ANVIL_RPC_URL) --private-key $(PRIVATE_KEY)  --broadcast -vv
+
+deploy-base:
+	@forge script script/DeployBase.s.sol:DeployBase --rpc-url $(BASE_SEPOLIA_RPC_URL) --private-key $(WALLET_PRIVATE_KEY)  --broadcast -vvvvv
 	
