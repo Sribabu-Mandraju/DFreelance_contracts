@@ -16,7 +16,7 @@ contract DeployBase is Script {
         // Load environment variables
         uint256 deployerPrivateKey = vm.envUint("WALLET_PRIVATE_KEY");
         address deployerAddress = vm.addr(deployerPrivateKey);
-        
+
         // DAO members (replace with actual Base addresses)
         address[] memory daoMembers = new address[](2);
         daoMembers[0] = 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f; // Replace with Base address
@@ -30,20 +30,17 @@ contract DeployBase is Script {
 
         // 1. Deploy MockUSDC (or use real USDC on Base)
         // MockUSDC usdcToken = new MockUSDC();
-        
+
         // 2. Deploy Treasury
         Treasury treasury = new Treasury(deployerAddress, 0x036CbD53842c5426634e7929541eC2318f3dCF7e);
-        
+
         // 3. Deploy Escrow
-        Escrow escrowContract = new Escrow(
-            0x036CbD53842c5426634e7929541eC2318f3dCF7e,
-            address(treasury),
-            deployerAddress
-        );
-        
+        Escrow escrowContract =
+            new Escrow(0x036CbD53842c5426634e7929541eC2318f3dCF7e, address(treasury), deployerAddress);
+
         // 4. Deploy HFT Token
         HFTtoken ourToken = new HFTtoken(deployerAddress);
-        
+
         // 5. Deploy ProposalManager
         ProposalManager proposalManager = new ProposalManager(
             daoMembers,

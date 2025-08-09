@@ -84,10 +84,9 @@ contract HFTtoken is ERC20, Ownable {
         CLAIM_AMOUNT = _newAmount;
     }
 
-    function getBidsOfUser(address _bidder) public  view returns (uint256[] memory _ids) {
+    function getBidsOfUser(address _bidder) public view returns (uint256[] memory _ids) {
         return bidsByAddress[_bidder];
     }
-
 
     function updateBidFee(uint256 _newBidFee) external onlyOwner {
         BID_FEE = _newBidFee;

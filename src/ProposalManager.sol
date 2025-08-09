@@ -7,15 +7,20 @@ import {IEscrow} from "./interfaces/IEscrow.sol";
 import "./types/DataTypes.sol";
 import "./types/Errors.sol";
 import "./types/Events.sol";
-import "./types/Constants.sol";
 
 contract ProposalManager {
     using SafeERC20 for IERC20;
 
+    // Constants with default values (can be updated by DAO)
+    uint256 public FIRST_PAYMENT_PERCENT = 40;
+    uint256 public SECOND_PAYMENT_PERCENT = 30;
+    uint256 public THIRD_PAYMENT_PERCENT = 30;
+    uint256 public constant BASIS_POINTS = 10000;
+    uint256 public PLATFORM_FEE_BASICPOINTS = 100;
+    uint256 public bidFee = 25e18;
+
     // State variables
     uint256 public proposalCount;
-    uint256 public bidFee;
-    uint256 public PLATFORM_FEE_BASICPOINTS;
     address public treasury;
     address public platformToken;
     address public escrow;
@@ -77,6 +82,63 @@ contract ProposalManager {
         usdcToken = IERC20(_usdcToken);
         bidFee = _bidFee;
         escrow = _escrowContract;
+    }
+
+    // ========== DAO Management Functions ========== //
+
+    /**
+     * @notice Update payment milestones percentages (must sum to 100)
+     * @param first First payment percentage
+     * @param second Second payment percentage
+     * @param third Third payment percentage
+     */
+    function updatePaymentPercentages(uint256 first, uint256 second, uint256 third) external onlyManager {
+        require(first + second + third == 100, "Sum must equal 100");
+
+        FIRST_PAYMENT_PERCENT = first;
+        SECOND_PAYMENT_PERCENT = second;
+        THIRD_PAYMENT_PERCENT = third;
+
+        emit PaymentPercentagesUpdated(first, second, third,block.timestamp);
+    }
+
+    /**
+     * @notice Update platform fee basis points
+     * @param newFee New fee in basis points (1% = 100)
+     */
+    function updatePlatformFee(uint256 newFee) external onlyManager {
+        require(newFee <= 1000, "Fee too high"); // Max 10%
+        PLATFORM_FEE_BASICPOINTS = newFee;
+        emit PlatformFeeUpdated(newFee);
+    }
+
+    /**
+     * @notice Update bid fee amount
+     * @param newBidFee New bid fee amount (in token decimals)
+     */
+    function updateBidFee(uint256 newBidFee) external onlyManager {
+        bidFee = newBidFee;
+        emit BidFeeUpdated(newBidFee);
+    }
+
+    /**
+     * @notice Update treasury address
+     * @param newTreasury New treasury address
+     */
+    function updateTreasury(address newTreasury) external onlyManager {
+        require(newTreasury != address(0), "Invalid address");
+        treasury = newTreasury;
+        emit TreasuryUpdated(newTreasury,block.timestamp);
+    }
+
+    /**
+     * @notice Update escrow contract address
+     * @param newEscrow New escrow contract address
+     */
+    function updateEscrow(address newEscrow) external onlyManager {
+        require(newEscrow != address(0), "Invalid address");
+        escrow = newEscrow;
+        emit EscrowUpdated(newEscrow,block.timestamp);
     }
 
     // External Functions
@@ -186,7 +248,7 @@ contract ProposalManager {
     function cancelProposal(uint256 proposalId) external onlyClient(proposalId) {
         Proposal memory proposal = proposals[proposalId];
         _updateProposalState(proposalId, ProposalState.Cancelled);
-        IEscrow(escrow).refundToClient(proposalId,proposal.client);
+        IEscrow(escrow).refundToClient(proposalId, proposal.client);
     }
 
     // Admin Functions
@@ -284,12 +346,16 @@ contract ProposalManager {
                 || newState == ProposalState.MilestonePayout_ONE || newState == ProposalState.MilestonePayout_TWO
                 || newState == ProposalState.MilestonePayout_THREE || newState == ProposalState.Completed
         ) {
-            if (msg.sender != proposal.client) revert OnlyClientCanCall(msg.sender);
+            if (msg.sender != proposal.client) {
+                revert OnlyClientCanCall(msg.sender);
+            }
         }
         // Only allow bidder to transition from Funded → InProgress
         else if (newState == ProposalState.InProgress) {
             if (msg.sender != proposal.bidder) revert OnlyBidderCanStartWork();
-            if (proposal.state != uint8(ProposalState.Funded)) revert MustBeInFundedState();
+            if (proposal.state != uint8(ProposalState.Funded)) {
+                revert MustBeInFundedState();
+            }
         }
 
         // Special case for Disputed state
@@ -346,18 +412,6 @@ contract ProposalManager {
         if (proposalId >= proposalCount) {
             revert InvalidProposalId(proposalId);
         }
-    }
-
-    function getFirstPaymentInstanceInPercentage() public pure returns (uint256) {
-        return FIRST_PAYMENT_PERCENT;
-    }
-
-    function getSecondPaymentInstanceInPercentage() public pure returns (uint256) {
-        return SECOND_PAYMENT_PERCENT;
-    }
-
-    function getThirdPaymentInstanceInPercentage() public pure returns (uint256) {
-        return THIRD_PAYMENT_PERCENT;
     }
 
     function getPlatformFee() public view returns (uint256) {

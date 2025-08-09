@@ -16,3 +16,14 @@ event DaoMemberRemoved(address indexed member);
 event PlatformFeeUpdated(uint256 newFee);
 
 event BidFeeUpdated(uint256 newBidFee);
+
+// Events for DAO parameter updates
+event PaymentPercentagesUpdated(uint256 first, uint256 second, uint256 third, uint256 timestamp);
+
+event PlatformFeeUpdated(uint256 newFee, uint256 timestamp);
+
+event BidFeeUpdated(uint256 newBidFee, uint256 timestamp);
+
+event TreasuryUpdated(address indexed newTreasury, uint256 timestamp);
+
+event EscrowUpdated(address indexed newEscrow, uint256 timestamp);

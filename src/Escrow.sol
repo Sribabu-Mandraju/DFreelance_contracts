@@ -34,6 +34,7 @@ contract Escrow is Ownable {
 
     // Mapping to track balances per proposal
     mapping(uint256 => uint256) public proposalBalances;
+    uint256 public totalLockedFunds; // Tracks sum of all proposal balances
 
     modifier onlyGovernance() {
         if (msg.sender != governanceContract) {
@@ -50,6 +51,43 @@ contract Escrow is Ownable {
         treasury = _treasury;
     }
 
+    // ========== GETTER FUNCTIONS ========== //
+
+    /**
+     * @notice Returns the total USDC balance held by this contract
+     * @return The total USDC balance (locked + unlocked)
+     */
+    function getTotalContractBalance() public view returns (uint256) {
+        return IERC20(usdcToken).balanceOf(address(this));
+    }
+
+    /**
+     * @notice Returns the total funds locked in all proposals
+     * @return The sum of all proposal balances
+     */
+    function getTotalLockedFunds() public view returns (uint256) {
+        return totalLockedFunds;
+    }
+
+    /**
+     * @notice Returns the available (unlocked) USDC balance
+     * @return The amount of USDC not assigned to any proposal
+     */
+    function getAvailableBalance() public view returns (uint256) {
+        return getTotalContractBalance() - totalLockedFunds;
+    }
+
+    /**
+     * @notice Returns the balance for a specific proposal
+     * @param proposalId The ID of the proposal to check
+     * @return The USDC balance for this proposal
+     */
+    function getProposalBalance(uint256 proposalId) public view returns (uint256) {
+        return proposalBalances[proposalId];
+    }
+
+    // ========== SETTER FUNCTIONS ========== //
+
     function setGovernanceContract(address _governance) external onlyOwner {
         if (_governance == address(0)) {
             revert InvalidAddress();
@@ -65,6 +103,7 @@ contract Escrow is Ownable {
 
         IERC20(usdcToken).safeTransferFrom(msg.sender, address(this), amount);
         proposalBalances[proposalId] += amount;
+        totalLockedFunds += amount;
 
         emit FundsDeposited(proposalId, msg.sender, amount, block.timestamp);
     }
@@ -87,8 +126,9 @@ contract Escrow is Ownable {
         uint256 feeAmount = (amount * feeBasisPoints) / 10000;
         uint256 paymentAmount = amount - feeAmount;
 
-        // Update balance
+        // Update balances
         proposalBalances[proposalId] = balance - amount;
+        totalLockedFunds -= amount;
 
         // Transfer funds
         IERC20(usdcToken).safeTransfer(treasury, feeAmount);
@@ -99,10 +139,6 @@ contract Escrow is Ownable {
 
     // Refund funds to client
     function refundToClient(uint256 proposalId, address client) external onlyGovernance {
-        // if (amount == 0 || client == address(0)) {
-        //     revert InvalidAmount();
-        // }
-
         uint256 balance = proposalBalances[proposalId];
         if (balance == 0) {
             revert AlreadyProposalFundsAreUsed();
@@ -110,32 +146,18 @@ contract Escrow is Ownable {
 
         IERC20(usdcToken).safeTransfer(client, balance);
         proposalBalances[proposalId] = 0;
+        totalLockedFunds -= balance;
 
         emit FundsWithdrawn(proposalId, client, balance, block.timestamp);
     }
 
     // Emergency withdrawal by owner (only for non-proposal funds)
-    // function emergencyWithdraw(
-    //     address to,
-    //     uint256 amount
-    // ) external onlyOwner {
-    //     uint256 contractBalance = IERC20(usdcToken).balanceOf(address(this));
-    //     uint256 lockedFunds = 0;
+    function emergencyWithdraw(address to, uint256 amount) external onlyOwner {
+        uint256 availableBalance = getAvailableBalance();
+        if (amount > availableBalance) {
+            revert InvalidAmount();
+        }
 
-    //     // Calculate total locked funds in all proposals
-    //     // Note: In production, you might want to track this separately
-    //     // to avoid gas costs of iterating through all proposals
-    //     for (uint256 i = 0; i < type(uint256).max; i++) {
-    //         lockedFunds += proposalBalances[i];
-    //         // Break if we've checked all possible proposals
-    //         if (lockedFunds >= contractBalance) break;
-    //     }
-
-    //     uint256 availableAmount = contractBalance - lockedFunds;
-    //     if (amount > availableAmount) {
-    //         revert InvalidAmount();
-    //     }
-
-    //     IERC20(usdcToken).safeTransfer(to, amount);
-    // }
+        IERC20(usdcToken).safeTransfer(to, amount);
+    }
 }
