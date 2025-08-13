@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol"; // Changed from interfaces to token
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IEscrow} from "./interfaces/IEscrow.sol";
 import "./types/DataTypes.sol";
@@ -99,7 +99,7 @@ contract ProposalManager {
         SECOND_PAYMENT_PERCENT = second;
         THIRD_PAYMENT_PERCENT = third;
 
-        emit PaymentPercentagesUpdated(first, second, third,block.timestamp);
+        emit PaymentPercentagesUpdated(first, second, third, block.timestamp);
     }
 
     /**
@@ -128,7 +128,7 @@ contract ProposalManager {
     function updateTreasury(address newTreasury) external onlyManager {
         require(newTreasury != address(0), "Invalid address");
         treasury = newTreasury;
-        emit TreasuryUpdated(newTreasury,block.timestamp);
+        emit TreasuryUpdated(newTreasury, block.timestamp);
     }
 
     /**
@@ -138,7 +138,7 @@ contract ProposalManager {
     function updateEscrow(address newEscrow) external onlyManager {
         require(newEscrow != address(0), "Invalid address");
         escrow = newEscrow;
-        emit EscrowUpdated(newEscrow,block.timestamp);
+        emit EscrowUpdated(newEscrow, block.timestamp);
     }
 
     // External Functions

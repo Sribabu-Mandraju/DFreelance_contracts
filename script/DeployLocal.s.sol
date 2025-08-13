@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
-import {Governer} from "../src/Governer.sol";
 import {HFTtoken} from "../src/HFTtoken.sol";
 import {Treasury} from "../src/Treasury.sol";
 import {ProposalManager} from "../src/ProposalManager.sol";
@@ -36,7 +35,7 @@ contract DeployLocal is Script {
         escrowContract = new Escrow(address(usdcToken), address(treasury), ANVIL_DEFAULT_PUBLIC_ADDRESS);
 
         //=============== deploying HFT token contract ======================
-        ourToken = new HFTtoken(ANVIL_DEFAULT_PUBLIC_ADDRESS);
+        ourToken = new HFTtoken(ANVIL_DEFAULT_PUBLIC_ADDRESS, address(usdcToken));
 
         // ============== deploying proposal manager contract ================
         address[] memory daoMembers = new address[](2);

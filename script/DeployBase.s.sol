@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
-import {Governer} from "../src/Governer.sol";
 import {HFTtoken} from "../src/HFTtoken.sol";
 import {Treasury} from "../src/Treasury.sol";
 import {ProposalManager} from "../src/ProposalManager.sol";
@@ -39,7 +38,7 @@ contract DeployBase is Script {
             new Escrow(0x036CbD53842c5426634e7929541eC2318f3dCF7e, address(treasury), deployerAddress);
 
         // 4. Deploy HFT Token
-        HFTtoken ourToken = new HFTtoken(deployerAddress);
+        HFTtoken ourToken = new HFTtoken(deployerAddress, 0x036CbD53842c5426634e7929541eC2318f3dCF7e);
 
         // 5. Deploy ProposalManager
         ProposalManager proposalManager = new ProposalManager(
