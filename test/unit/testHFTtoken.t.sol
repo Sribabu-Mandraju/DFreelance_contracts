@@ -89,6 +89,13 @@ contract TestHFTtoken is Test {
         vm.stopPrank();
     }
 
+    function testPlaceBidByHFT() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+        HFTtoken tokenOne = HFTtoken(0xd0D1B6E1dE2F705701FE370e91f8fb4731161d5a);
+        tokenOne.placeBid(1);
+        vm.stopPrank();
+    }
+
     modifier claimTokens() {
         vm.startPrank(alex);
         token.claimTokens();

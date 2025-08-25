@@ -140,9 +140,9 @@ contract Escrow is Ownable {
     // Refund funds to client
     function refundToClient(uint256 proposalId, address client) external onlyGovernance {
         uint256 balance = proposalBalances[proposalId];
-        if (balance == 0) {
-            revert AlreadyProposalFundsAreUsed();
-        }
+        // if (balance == 0) {
+        //     revert AlreadyProposalFundsAreUsed();
+        // }
 
         IERC20(usdcToken).safeTransfer(client, balance);
         proposalBalances[proposalId] = 0;

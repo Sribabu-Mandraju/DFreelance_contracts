@@ -49,4 +49,39 @@ deploy-local:
 
 deploy-base:
 	@forge script script/DeployBase.s.sol:DeployBase --rpc-url $(BASE_SEPOLIA_RPC_URL) --private-key $(WALLET_PRIVATE_KEY)  --broadcast -vvvvv
+
+deploy-transfer:
+	@forge script script/interactions/EnableTransfers.s.sol:EnableTransfer --rpc-url $(BASE_SEPOLIA_RPC_URL) --private-key $(WALLET_PRIVATE_KEY)  --broadcast -vvvvv
 	
+deploy-escrow:
+	@forge script script/interactions/Escrow_Interaction.s.sol:Escrow_Interaction --rpc-url $(BASE_SEPOLIA_RPC_URL) --private-key $(WALLET_PRIVATE_KEY)  --broadcast -vvvvv
+
+
+verify-base:
+	forge verify-contract \
+  0xC7Ac55fF5C832fDc8572C5F0C6E203BB329Af35B \
+  src/TimeLockNFTStaking.sol:TimeLockNFTStaking \
+  --chain-id 8453 \
+  --verifier etherscan \
+  --verifier-url https://api.basescan.org/api \
+  --etherscan-api-key $(BASE_SCAN_API_KEY) \
+  --compiler-version 0.8.28 \
+  --rpc-url https://base-mainnet.g.alchemy.com/v2/1kKjc1l5XNcYUfnpMkIht \
+
+verify-contract:
+  forge verify-contract \
+  --chain base-sepolia \
+  --etherscan-api-key QFTNJ48YRWCIV4JK52FT91HYUYN77AY1DH \
+  --compiler-version v0.8.24+commit.e11b9ed9 \
+  --constructor-args $(cast abi-encode "constructor(address,address,address)" 0x036CbD53842c5426634e7929541eC2318f3dCF7e 0xd0f8B61b0EB48f54e10e3daA68bAC846e4bC2F56 0x30217A8C17EF5571639948D118D086c73f823058) \
+  0xb7eBD3c77C8c0B0Cf783b7C8930C01BCDf8c562C \
+  src/Escrow.sol:Escrow
+
+
+
+check-verify:
+	forge verify-contract \
+  --verifier-url https://api-sepolia.basescan.org/api \
+  --etherscan-api-key QFTNJ48YRWCIV4JK52FT91HYUYN77AY1DH \
+  0xb7eBD3c77C8c0B0Cf783b7C8930C01BCDf8c562C \
+  src/Escrow.sol:Escrow

@@ -29,7 +29,13 @@ contract TestProposalManager is Test {
 
     function setUp() public {
         deploys = new DeployLocal();
-        (c_ProposalManager, c_Escrow, usdcToken, c_HFToken, c_Treasury) = deploys.run();
+        (
+            c_ProposalManager,
+            c_Escrow,
+            usdcToken,
+            c_HFToken,
+            c_Treasury
+        ) = deploys.run();
 
         vm.startPrank(deployer);
         c_Escrow.setGovernanceContract(address(c_ProposalManager));
@@ -60,7 +66,11 @@ contract TestProposalManager is Test {
         // (uint256 proposalId,address client,address bidder,uint256 startTime,uint256 endTime,uint256 budget,uint256 bidAmount,uint8 proposalState) = proposal;
         assertEq(proposal.client, alex, "invalid client");
         assertEq(proposal.bidder, address(0), "address must be 0 address");
-        assertEq(proposal.endTime, uint256(proposal.startTime + 10 days - 1), "invalid time");
+        assertEq(
+            proposal.endTime,
+            uint256(proposal.startTime + 10 days - 1),
+            "invalid time"
+        );
         assertEq(proposal.budget, 10 * 1e6);
         assertEq(proposal.bidAmount, 0);
         assertEq(proposal.state, 0);
@@ -198,6 +208,75 @@ contract TestProposalManager is Test {
         console.log("alex :", alex);
         console.log("prop bal :", proposalBalance);
         assertEq(alexBalance, 2100000);
+    }
+
+    function testPlaceBid() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+
+        ProposalManager pm = ProposalManager(
+            0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10
+        );
+        Proposal memory proposal = pm.getProposal(32);
+        console.log("proposal state", proposal.state);
+        console.log("bidder", proposal.bidder);
+        console.log("client", proposal.client);
+        console.log("bid amount :", proposal.bidAmount);
+        console.log("bidget :", proposal.budget);
+        // pm.createProposal(proposal.startTime + , 10000000);
+        // pm.acceptBid(0,0x30217A8C17EF5571639948D118D086c73f823058 , 1000000);
+        pm.paySecondMilestone(32);
+
+        vm.stopPrank();
+    }
+
+    function testFirstMileStone() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+
+        // ProposalManager pm = ProposalManager(0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10);
+        Escrow esc = Escrow(0xb7eBD3c77C8c0B0Cf783b7C8930C01BCDf8c562C);
+        address govenrance = esc.governanceContract();
+        address owner = esc.owner();
+        console.log("owner address ", owner);
+        console.log("governance :", govenrance);
+        // pm.payFirstMilestone(0);
+        vm.stopPrank();
+    }
+
+    function testOpenProposalToBidFork() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+        ProposalManager pm = ProposalManager(
+            0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10
+        );
+        // pm.cancelProposal(25);
+        Proposal memory proposal = pm.getProposal(25);
+        console.log("proposal state", proposal.state);
+        vm.stopPrank();
+    }
+
+    function testPayInstant() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+        ProposalManager pm = ProposalManager(
+            0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10
+        );
+        // pm.cancelProposal(25);
+        Proposal memory proposal = pm.getProposal(44);
+        console.log("proposal bid amount :",proposal.bidAmount);
+        pm.payFirstMilestone(44);
+        vm.stopPrank();
+    }
+
+
+    function testDeposit() public {
+        vm.startPrank(0x30217A8C17EF5571639948D118D086c73f823058);
+        ProposalManager pm = ProposalManager(
+            0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10
+        );
+        // pm.cancelProposal(25);
+        Proposal memory proposal = pm.getProposal(44);
+        console.log("proposal bid amount :",proposal.bidAmount);
+        IERC20(0x036CbD53842c5426634e7929541eC2318f3dCF7e).approve(0x9e002323F46D6908EC4ef5444f1Bd0F67AF9Cf10, 1000000);
+        pm.depositBidAmount(49);
+        vm.stopPrank();
     }
 
     //   function testTreasureBalance() public view {
